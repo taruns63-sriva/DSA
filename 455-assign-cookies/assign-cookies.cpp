@@ -20,7 +20,7 @@ public:
                 i++;
             } 
             else {
-                j--;
+                j++;
             }
         }
         return cnt;
