@@ -30,7 +30,7 @@ public:
                 curr = multiply(preCurr, res);
                 res = preRes;
             }
-            else if(x = ','){
+            else if(x == ','){
                 for(auto&i:curr) res.push_back(i); 
                 curr.clear(); 
             }
