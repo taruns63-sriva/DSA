@@ -1,30 +1,40 @@
 class Solution {
 public:
-    int hlp(int n){
-        if(n == 0){
-            return 0;
-        }
-        return hlp(n / 10) + n % 10;
-    }
     int minSwaps(vector<int>& nums) {
         int n = nums.size();
-        vector<int> t1(nums.begin(), nums.end());
-        sort(t1.begin(), t1.end(), [&](int a, int b){
-            int t1 = hlp(a), t2 = hlp(b);
-            return t1 == t2 ? a < b : t1 < t2;
-        });
-        unordered_map<int, int> mp;
-        for(int i = 0;i < n;i++){
-            mp[nums[i]] = i;
+        auto getsum = [](int x) {
+            int s = 0;
+            while (x > 0) {
+                s += x % 10;
+                x /= 10;
+            }
+            return s;
+        };
+        vector<pair<pair<int, int>, int>> a(n);
+        for (int i = 0; i < n; i++) {
+            a[i] = {{getsum(nums[i]), nums[i]}, i};
         }
+        sort(a.begin(), a.end());
+        vector<int> target(n);
+        for (int i = 0; i < n; i++) {
+            target[a[i].second] = i;
+        }
+        vector<bool> vis(n, false);
         int ans = 0;
-        for(int i = 0;i < n;i++){
-            if(nums[i] == t1[i]) continue;
-            int j = mp[t1[i]];
-            mp[nums[i]] = j;
-            mp[t1[i]] = i;
-            swap(nums[i], nums[j]);
-            ans++;
+        for (int i = 0; i < n; i++) {
+            if (vis[i] || target[i] == i) {
+                continue;
+            }
+            int len = 0;
+            int cur = i;
+            while (!vis[cur]) {
+                vis[cur] = true;
+                cur = target[cur];
+                len++;
+            }
+            if (len > 1) {
+                ans += len - 1;
+            }
         }
         return ans;
     }
